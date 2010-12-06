@@ -1,4 +1,4 @@
-=== Databae Browser ===
+=== Database Browser ===
 Contributors: mrwiblog
 Donate link: http://www.stillbreathing.co.uk/donate/
 Tags: database, table, browse, query, download, export
