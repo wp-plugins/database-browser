@@ -4,7 +4,7 @@ Plugin Name: Database Browser
 Plugin URI: http://www.stillbreathing.co.uk/wordpress/database-browser/
 Description: Easily browse the data in your database, and download in CSV, XML and JSON format
 Author: Chris Taylor
-Version: 1.1
+Version: 1.1.1
 Author URI: http://www.stillbreathing.co.uk/
 */
 
@@ -15,7 +15,7 @@ $register = new Plugin_Register();
 $register->file = __FILE__;
 $register->slug = "databasebrowser";
 $register->name = "Database Browser";
-$register->version = "1.1";
+$register->version = "1.1.1";
 $register->developer = "Chris Taylor";
 $register->homepage = "http://www.stillbreathing.co.uk";
 $register->Plugin_Register();
@@ -25,7 +25,7 @@ if( !class_exists( 'DatabaseBrowser' ) ) {
 	class DatabaseBrowser {
 	
 		// set some properties
-		var $version = "1.1";
+		var $version = "1.1.1";
 		var $tables = array();
 		var $table = null;
 		var $columns = array();
@@ -51,6 +51,7 @@ if( !class_exists( 'DatabaseBrowser' ) ) {
 		
 			// if requesting a table, redirect
 			if ( wp_verify_nonce( @$_POST["_wpnonce"], "table" ) && isset( $_POST["table"] ) && $_POST["table"] != "" ) {
+				unset( $_SESSION["custom_query"] );
 				header( "Location: tools.php?page=databasebrowser&table=" . $_POST["table"] . "&_wpnonce=" . wp_create_nonce( "table" ) );
 			}
 		
@@ -102,11 +103,15 @@ if( !class_exists( 'DatabaseBrowser' ) ) {
 			
 				$limit = 100;
 				$paginator = new Paginator( $limit );
-
+				$custom = false;
+				
 				// if a query has been given
-				if ( isset( $_POST["query"] ) ) {
+				if ( isset( $_POST["query"] ) || isset( $_SESSION["custom_query"] ) ) {
+					$custom = true;
 					$tablename = "Custom query";
-					$this->runQuery( $_POST["query"] );
+					$query = @$_POST["query"];
+					if ( $query == "" ) $query = $_SESSION["custom_query"];
+					$this->runQuery( $query );
 				} else {
 					// load the table
 					$this->loadTable( $paginator->findStart(), $limit );
@@ -127,13 +132,13 @@ if( !class_exists( 'DatabaseBrowser' ) ) {
 				}
 				
 				// if a query has not been given
-				if ( !isset( $_POST["query"] ) ) {
+				if ( !$custom ) {
 				echo '
 				<form action="' . $this->formURL . '" method="post">
-				<p><label id="wherelabel" for="where">' . __( "Where:", "databasebrowser" ) . '</label>
+				<p><label id="wherelabel" for="where">' . __( "Where (click to toggle):", "databasebrowser" ) . '</label>
 					<textarea name="where" cols="30" rows="6" style="width:100%;height:4em" class="hider" id="where">' . @stripslashes( $_POST["where"] ) . '</textarea>
 				</p>
-				<p><label id="orderbylabel" for="orderby">' . __( "Order by:", "databasebrowser" ) . '</label>
+				<p><label id="orderbylabel" for="orderby">' . __( "Order by (click to toggle):", "databasebrowser" ) . '</label>
 					<textarea name="orderby" cols="30" rows="6" style="width:100%;height:4em" class="hider" id="orderby">' . @stripslashes( $_POST["orderby"] ) . '</textarea>
 				</p>
 				<p><button type="submit" class="button">' . __( "Run where and order by clauses", "databasebrowser" ) . '</button>
@@ -157,12 +162,16 @@ if( !class_exists( 'DatabaseBrowser' ) ) {
 					// write the export links
 					$this->exportLinks();
 				
-					// write the data table with pagination
-					echo $paginator->links;
+					// write the data table with pagination (if not running a custom query)
+					if ( !$custom ) {
+						echo $paginator->links;
+					}
 					echo '<div class="tablewrapper">';
 					echo $this->toHTML( "widefat" );
 					echo '</div>';
-					echo $paginator->links;
+					if ( !$custom ) {
+						echo $paginator->links;
+					}
 					
 					// write the export links
 					$this->exportLinks();
@@ -197,8 +206,8 @@ if( !class_exists( 'DatabaseBrowser' ) ) {
 			if ( $this->query != null && $this->query != "" ) {
 			
 				echo '
-				<form action="tools.php?page=databasebrowser&amp;table=' . $this->table . '" method="post">
-				<h4 id="queryheader">' . __( "Query performed:", "databasebrowser" ) . '</h4>
+				<form action="tools.php?page=databasebrowser&amp;table=' . $this->table . '&amp;_wpnonce=' . wp_create_nonce( "table" ) . '" method="post">
+				<h4 id="queryheader">' . __( "Query performed (click to toggle):", "databasebrowser" ) . '</h4>
 				<div class="hider" id="query">
 					<p><textarea name="query" cols="30" rows="10" style="width:100%;height:10em">' . $this->query . '</textarea></p>
 					<p><input type="submit" class="button" value="' . __( "Run query", "databasebrowser" ) . '" />
@@ -230,6 +239,7 @@ if( !class_exists( 'DatabaseBrowser' ) ) {
 		
 		function loadTable( $start = 0, $limit = 100 ) {
 			if ( $this->table != "" ) {
+				unset( $_SESSION["custom_query"] );
 				$this->loadTableColumns();
 				$this->loadRows( $start, $limit );
 			}
@@ -271,14 +281,13 @@ if( !class_exists( 'DatabaseBrowser' ) ) {
 		// run a custom query
 		function runQuery( $query ) {
 			global $wpdb;
-			$query = mysql_real_escape_string( stripslashes( $query ) );
-			$query = preg_replace('/SELECT/', 'SELECT SQL_CALC_FOUND_ROWS', $query, 1);
+			$query = stripslashes( $query );
 			$this->query = $query;
 			session_start();
 			$_SESSION["custom_query"] = $query;
 			$this->rows = $wpdb->get_results( $query, ARRAY_A );
 			$this->error = mysql_error( $wpdb->dbh );
-			$this->rowcount = $wpdb->get_var( "SELECT FOUND_ROWS();" );
+			$this->rowcount = count( $this->rows );
 			if ( count( $this->rows ) > 0 ) {
 				foreach ( $this->rows[0] as $key => $value ){
 					$this->columns[]->Field = $key;
@@ -296,7 +305,7 @@ if( !class_exists( 'DatabaseBrowser' ) ) {
 				<ul>
 					<li><a href="' . wp_nonce_url( 'tools.php?page=databasebrowser&amp;table=' . $this->table . '&amp;export=XML', 'export' ) . '" class="button">XML</a></li>
 					<li><a href="' . wp_nonce_url( 'tools.php?page=databasebrowser&amp;table=' . $this->table . '&amp;export=HTML', 'export' ) . '" class="button">HTML</a></li>
-					<li><a href="' . wp_nonce_url( 'tools.php?page=databasebrowser&amp;table=' . $this->table . '&amp;export=CV', 'export' ) . '" class="button">CSV</a></li>
+					<li><a href="' . wp_nonce_url( 'tools.php?page=databasebrowser&amp;table=' . $this->table . '&amp;export=CSV', 'export' ) . '" class="button">CSV</a></li>
 					<li><a href="' . wp_nonce_url( 'tools.php?page=databasebrowser&amp;table=' . $this->table . '&amp;export=JSON', 'export' ) . '" class="button">JSON</a></li>
 				</ul>
 			</div>

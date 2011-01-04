@@ -3,8 +3,8 @@ Contributors: mrwiblog
 Donate link: http://www.stillbreathing.co.uk/donate/
 Tags: database, table, browse, query, download, export
 Requires at least: 3.0.1
-Tested up to: 3.0.2
-Stable tag: 1.1
+Tested up to: 3.0.4
+Stable tag: 1.1.1
 
 Easily query and browse tables in your database, and download in XML, JSON, CSV and HTML format
 
@@ -38,6 +38,10 @@ Only people with export permisions - the people who can run your WordPress expor
 Version 1.1 includes security additions which will help protect against hacking.
 
 == Changelog ==
+
+= 1.1.1 (2011/01/04) =
+
+Fixed incorrect link for CSV download. Changed table cell styling. Removed pagination links for custom queries. Removed SQL_CALC_FOUND_ROWS in custom queries.
 
 = 1.1 (2010/12/22) =
 

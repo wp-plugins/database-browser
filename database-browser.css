@@ -2,6 +2,10 @@
 	width: 98%;
 	overflow: auto;
 }
+#databasebrowser td {
+	border: 1px solid #ddd;
+	border-width: 0 1px 1px 0;
+}
 #exportlinks {
 	text-align: right;
 }
