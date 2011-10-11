@@ -4,7 +4,7 @@ Plugin Name: Database Browser
 Plugin URI: http://www.stillbreathing.co.uk/wordpress/database-browser/
 Description: Easily browse the data in your database, and download in CSV, XML and JSON format
 Author: Chris Taylor
-Version: 1.1.1
+Version: 1.1.2
 Author URI: http://www.stillbreathing.co.uk/
 */
 
@@ -15,7 +15,7 @@ $register = new Plugin_Register();
 $register->file = __FILE__;
 $register->slug = "databasebrowser";
 $register->name = "Database Browser";
-$register->version = "1.1.1";
+$register->version = "1.1.2";
 $register->developer = "Chris Taylor";
 $register->homepage = "http://www.stillbreathing.co.uk";
 $register->Plugin_Register();
@@ -25,7 +25,7 @@ if( !class_exists( 'DatabaseBrowser' ) ) {
 	class DatabaseBrowser {
 	
 		// set some properties
-		var $version = "1.1.1";
+		var $version = "1.1.2";
 		var $tables = array();
 		var $table = null;
 		var $columns = array();
@@ -255,7 +255,7 @@ if( !class_exists( 'DatabaseBrowser' ) ) {
 			global $wpdb;
 			$sql = "SELECT SQL_CALC_FOUND_ROWS ";
 			foreach( $this->columns as $column ) {
-				$sql .= $column->Field . ", ";
+				$sql .= "`" . $column->Field . "`, ";
 			}
 			$sql = trim( trim( $sql ), "," );
 			$sql .= " FROM " . $wpdb->escape( $this->table );
@@ -265,7 +265,7 @@ if( !class_exists( 'DatabaseBrowser' ) ) {
 			}
 			// using an order by
 			if ( !empty( $_POST["orderby"] ) ) {
-				$sql .= " ORDER BY " . stripslashes( $_POST["orderby"] );
+				$sql .= " ORDER BY `" . stripslashes( $_POST["orderby"] ) . "`";
 			}
 			// using a limit
 			if ( $limit != null ) {
