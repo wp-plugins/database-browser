@@ -4,7 +4,7 @@ Donate link: http://www.stillbreathing.co.uk/donate/
 Tags: database, table, browse, query, download, export
 Requires at least: 3.0.1
 Tested up to: 3.2.1
-Stable tag: 1.1.2
+Stable tag: 1.1.3
 
 Easily query and browse tables in your database, and download in XML, JSON, CSV and HTML format
 
@@ -38,6 +38,10 @@ Only people with export permisions - the people who can run your WordPress expor
 Version 1.1 includes security additions which will help protect against hacking.
 
 == Changelog ==
+
+= 1.1.3 (2013/01/05) =
+
+Fixed incorrect $wpdb->prepare() call.
 
 = 1.1.2 (2011/10/11) =
 

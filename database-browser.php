@@ -4,7 +4,7 @@ Plugin Name: Database Browser
 Plugin URI: http://www.stillbreathing.co.uk/wordpress/database-browser/
 Description: Easily browse the data in your database, and download in CSV, XML and JSON format
 Author: Chris Taylor
-Version: 1.1.2
+Version: 1.1.3
 Author URI: http://www.stillbreathing.co.uk/
 */
 
@@ -15,7 +15,7 @@ $register = new Plugin_Register();
 $register->file = __FILE__;
 $register->slug = "databasebrowser";
 $register->name = "Database Browser";
-$register->version = "1.1.2";
+$register->version = "1.1.3";
 $register->developer = "Chris Taylor";
 $register->homepage = "http://www.stillbreathing.co.uk";
 $register->Plugin_Register();
@@ -228,7 +228,7 @@ if( !class_exists( 'DatabaseBrowser' ) ) {
 		
 		function loadTables() {
 			global $wpdb;
-			$sql = $wpdb->prepare( "SHOW TABLES;" );
+			$sql = "SHOW TABLES;";
 			$results = $wpdb->get_results( $sql, ARRAY_N );
 			$tables = array();
 			foreach( $results as $result ) {
