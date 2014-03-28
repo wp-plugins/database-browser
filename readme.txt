@@ -3,16 +3,16 @@ Contributors: mrwiblog
 Donate link: http://www.stillbreathing.co.uk/donate/
 Tags: database, table, browse, query, download, export
 Requires at least: 3.0.1
-Tested up to: 3.5.1
-Stable tag: 1.1.4
+Tested up to: 3.8.1
+Stable tag: 1.2
 
-Easily query and browse tables in your database, and download in XML, JSON, CSV and HTML format
+Easily query and browse tables in your database, and download in XML, JSON, CSV, SQL and HTML format
 
 == Description ==
 
-Ever needed to check some data in one of your WordPress database tables, but don't have PHPMyAdmin available? Now you can easily query your data and export it in HTML, XML, CSV and JSON formats with a simple plugin.
+Ever needed to check some data in one of your WordPress database tables, but don't have PHPMyAdmin available? Now you can easily query your data and export it in HTML, XML, CSV, SQL (insert statements) and JSON formats with a simple plugin.
 
-There are other options, for example you can write your own 'where' and 'order by' clauses, and pagination is built-in. You can also see the complete query run against your database.
+There are other options, for example you can write your own 'where' and 'order by' clauses, and pagination is built-in. You can also see the complete query run against your database. And you can even save queries with custom names, so if there are queries you use a lot they are only a click away.
 
 == Installation ==
 
@@ -38,6 +38,13 @@ Only people with export permisions - the people who can run your WordPress expor
 Version 1.1 includes security additions which will help protect against hacking.
 
 == Changelog ==
+
+= 1.2 (2014/03/28) =
+
+Added functionality to save queries with custom names
+Rewrote much of the plugin
+Reconfigured the UI
+Added Spanish translation (thanks to Andrew at http://www.webhostinghub.com/)
 
 = 1.1.4 (2013/05/29) =
 

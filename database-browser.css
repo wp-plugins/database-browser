@@ -13,3 +13,14 @@
 	display: inline;
 	margin: 0 0 0 2em;
 }
+#databasebrowser label {
+	float: left;
+	width: 20%;
+}
+#where, #orderby {
+	width: 78%;
+}
+#databasebrowser .navbutton {
+	float: right;
+	margin-left: 10px;
+}

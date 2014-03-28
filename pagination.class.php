@@ -24,7 +24,7 @@ if ( !class_exists( "Paginator" ) ) {
 		
 		function findCurrentPage() {
 		
-			if ( ( !isset( $_GET[$this->querystringVar] ) ) || ( $_GET[$this->querystringVar] == "1" ) ) {
+			if ( ( ! isset( $_GET[$this->querystringVar] ) ) || ( $_GET[$this->querystringVar] == "1" ) ) {
 				$this->currentPage = 1;
 			} else {
 				$this->currentPage = (int)$_GET[$this->querystringVar];

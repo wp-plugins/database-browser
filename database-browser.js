@@ -1,13 +1,15 @@
 jQuery(document).ready(function(){
 	jQuery(".hider").hide();
-	jQuery("#wherelabel").click(function(){
-		jQuery("#where").toggle();
-	});
-	jQuery("#orderbylabel").click(function(){
-		jQuery("#orderby").toggle();
-	});
-	jQuery("#queryheader").click(function(){
+	jQuery("#queryheader").click(function(e){
 		jQuery("#query").toggle();
+		e.preventDefault();
+		return false;
+	});
+	jQuery("#editquery").click(function(){
+		jQuery("#filters").toggle();
+	});
+	jQuery("#newquery").click(function(){
+		jQuery("#querynav").toggle();
 	});
 	// set up main objects
 	var exportlinks = jQuery("#databasebrowser .export");
