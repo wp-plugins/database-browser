@@ -10,7 +10,7 @@
  */
 
 // include the Plugin_Register class
-require_once( WP_PLUGIN_DIR . "/database-browser/plugin-register.class.php" );
+require_once( plugin_dir_path( __FILE__ ) . "plugin-register.class.php" );
 // create a new instance of the Plugin_Register class
 $register = new Plugin_Register();
 $register->file = __FILE__;
@@ -149,7 +149,7 @@ if ( ! class_exists( 'DatabaseBrowser' ) ) {
 		 * @since 1.0
 		 */
 		function DatabaseBrowser() {
-			require_once( WP_PLUGIN_DIR . "/database-browser/pagination.class.php" );
+			require_once( plugin_dir_path( __FILE__ ) . "pagination.class.php" );
 			$this->formURL = remove_query_arg( "p" );
 		}
 
@@ -287,7 +287,7 @@ if ( ! class_exists( 'DatabaseBrowser' ) ) {
 		 * @since 1.0
 		 */
 		function enqueue_admin_css() {
-			wp_register_style( 'databasebrowser', WP_PLUGIN_URL . "/database-browser/database-browser.css" );
+			wp_register_style( 'databasebrowser', plugin_dir_url( __FILE__ ) . "database-browser.css" );
 			wp_enqueue_style( 'databasebrowser' );
 		}
 
